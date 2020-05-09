@@ -2,11 +2,11 @@ package com.netcracker.service;
 
 
 import com.netcracker.dto.BookDTO;
-import com.netcracker.dto.BuyerDTO;
 import com.netcracker.model.Book;
-import com.netcracker.model.Buyer;
 import com.netcracker.repos.BookRepository;
-import com.netcracker.repos.BuyerRepository;
+import com.netcracker.view.book.BookView;
+import com.netcracker.view.book.BookViewWithNamesAndPrices;
+import com.netcracker.view.book.BookViewWithQuantity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,20 +55,24 @@ public class BookService {
         return books;
     }
 
-    public List<Object[]> getAllDistinctBooks(){
-        List<Object[]> list = bookRepository.getAllDistinctByNameAndPrice();
+    public List<BookView> getAllDistinctBooks(){
+        List<BookView> list = bookRepository.getAllDistinctByNameAndPrice();
         log.info("IN getAllDistinctBooks - name and price :{}",list);
         return list;
     }
 
-    public List<Object[]> getBooksNamesAndPrices(Double price){
-        List<Object[]> list = bookRepository.getBooksNamesAndPrices(price);
+    public List<BookViewWithNamesAndPrices> getBooksNamesAndPrices(Double price){
+        List<BookViewWithNamesAndPrices> list = bookRepository.getBooksNamesAndPrices(price);
         log.info("IN getBookNamesAndPrices - name and price :{}",list);
         return list;
     }
 
-    public List<Object[]> getDifficultBooksInfo(Integer quantity){
+    public List<BookViewWithQuantity> getDifficultBooksInfo(Integer quantity){
         return bookRepository.findAllBooksInfo(quantity);
+    }
+
+    public List<BookView> getBookNameById(){
+        return bookRepository.getBooksById();
     }
 }
 

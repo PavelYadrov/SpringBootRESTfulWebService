@@ -2,13 +2,15 @@ package com.netcracker.service;
 
 
 import com.netcracker.dto.PurchaseDTO;
-import com.netcracker.model.Book;
-import com.netcracker.model.Buyer;
 import com.netcracker.model.Purchase;
 import com.netcracker.repos.BookRepository;
 import com.netcracker.repos.BuyerRepository;
 import com.netcracker.repos.PurchaseRepository;
 import com.netcracker.repos.ShopRepository;
+import com.netcracker.view.purchase.PurchaseViewDetailedInfo;
+import com.netcracker.view.purchase.PurchaseViewGreaterSum;
+import com.netcracker.view.purchase.PurchaseViewNameLocDate;
+import com.netcracker.view.purchase.PurchaseViewNamesAndShops;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,20 +47,20 @@ public class PurchaseService {
     }
 
     public void update(PurchaseDTO purchaseDTO, Purchase purchase){
-        if (purchaseDTO.getBook_id()!=null) purchase.setBook_id(purchaseDTO.getBook_id());
-        if (purchaseDTO.getBuyer_id()!=null) purchase.setBuyer_id(purchaseDTO.getBuyer_id());
+        if (purchaseDTO.getBook_id()!=null) purchase.setBook(bookRepository.findById(purchaseDTO.getBook_id()).get());
+        if (purchaseDTO.getBuyer_id()!=null) purchase.setBuyer(buyerRepository.findById(purchaseDTO.getBuyer_id()).get());
         if (purchaseDTO.getDate()!=null) purchase.setDate(purchaseDTO.getDate());
         if (purchaseDTO.getQuantity()!=null) purchase.setQuantity(purchaseDTO.getQuantity());
-        if (purchaseDTO.getShop_id()!=null) purchase.setShop_id(purchaseDTO.getShop_id());
+        if (purchaseDTO.getShop_id()!=null) purchase.setShop(shopRepository.findById(purchaseDTO.getShop_id()).get());
         if (purchaseDTO.getSum()!=null) purchase.setSum(purchaseDTO.getSum());
     }
     public void change(Purchase purchaseOld,Purchase purchaseNew){
         purchaseOld.setSum(purchaseNew.getSum());
-        purchaseOld.setShop_id(purchaseNew.getShop_id());
+        purchaseOld.setShop(purchaseNew.getShop());
         purchaseOld.setQuantity(purchaseNew.getQuantity());
         purchaseOld.setDate(purchaseNew.getDate());
-        purchaseOld.setBuyer_id(purchaseNew.getBuyer_id());
-        purchaseOld.setBook_id(purchaseNew.getBook_id());
+        purchaseOld.setBuyer(purchaseNew.getBuyer());
+        purchaseOld.setBook(purchaseNew.getBook());
     }
 
     public List<Purchase> getAllPurchases(){
@@ -73,50 +75,19 @@ public class PurchaseService {
         return months;
     }
 
-    public Map<Long,List<String>> getPurchaseBuyerAndShopInfo(){
-        List<Purchase> purchases = purchaseRepository.findAll();
-        Map<Long,List<String>> result= new HashMap<>();
-        purchases.forEach(purchase -> {
-            String name = buyerRepository.findById(purchase.getBuyer_id()).orElse(null).getLastname();
-            String shop = shopRepository.findById(purchase.getShop_id()).orElse(null).getName();
-            List<String> res = new ArrayList<>();
-            res.add(name);
-            res.add(shop);
-            result.put(purchase.getId(),res);
-        });
-        return result;
+    public List<PurchaseViewNamesAndShops>  getPurchaseBuyerAndShopInfo(){
+        return purchaseRepository.findAllNamesAndShops();
     }
 
-    public Map<Long,List<Object>> getPurchaseDetailedInfo(){
-        List<Purchase> purchases = purchaseRepository.findAll();
-        Map<Long,List<Object>> result= new HashMap<>();
-        purchases.forEach(purchase -> {
-            Buyer buyer = buyerRepository.findById(purchase.getBuyer_id()).orElse(null);
-            Book book = bookRepository.findById(purchase.getBook_id()).orElse(null);
-            List<Object> res = new ArrayList<>();
-            res.add(purchase.getDate());
-            res.add(buyer.getLastname());
-            res.add(buyer.getDiscount());
-            res.add(book.getName());
-            res.add(purchase.getQuantity());
-            result.put(purchase.getId(),res);
-        });
-        return result;
+    public List<PurchaseViewDetailedInfo> getPurchaseDetailedInfo(){
+        return purchaseRepository.getDetailedPurchaseInfo();
     }
 
-    public Map<Long,List<Object>> getAllPurchasesWithSumGreaterThan(Double sum){
-        List<Purchase> purchases = purchaseRepository.findAllBySumGreaterThan(sum);
-        Map<Long,List<Object>> result =new HashMap<>();
-        purchases.forEach(purchase -> {
-            List<Object> res = new ArrayList<>();
-            res.add(buyerRepository.findById(purchase.getBuyer_id()).orElse(null).getLastname());
-            res.add(purchase.getDate());
-            result.put(purchase.getId(),res);
-        });
-        return result;
+    public List<PurchaseViewGreaterSum> getAllPurchasesWithSumGreaterThan(Double sum){
+        return purchaseRepository.findAllBySumGreaterThan(sum);
     }
 
-    public List<Object[]> findAllPurchasesAfterMarch(Long month){
+    public List<PurchaseViewNameLocDate> findAllPurchasesAfterMarch(Long month){
         return purchaseRepository.findAllPurchasesAfterMonthAndSameLocs(month);
     }
 }

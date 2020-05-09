@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/purchase/")
+@RequestMapping(value = "purchase/")
 public class PurchaseController {
 
     private PurchaseService purchaseService;

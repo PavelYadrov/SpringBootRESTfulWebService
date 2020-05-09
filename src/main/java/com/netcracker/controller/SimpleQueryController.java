@@ -1,12 +1,12 @@
 package com.netcracker.controller;
 
-import com.netcracker.dto.HelperDTO;
-import com.netcracker.model.Buyer;
-import com.netcracker.model.Purchase;
 import com.netcracker.service.BookService;
 import com.netcracker.service.BuyerService;
 import com.netcracker.service.PurchaseService;
 import com.netcracker.service.ShopService;
+import com.netcracker.view.book.BookView;
+import com.netcracker.view.book.BookViewWithNamesAndPrices;
+import com.netcracker.view.buyer.BuyerViewV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping(value = "/query/")
+@RequestMapping(value = "query/")
 public class SimpleQueryController {
 
     private BookService bookService;
@@ -37,7 +37,7 @@ public class SimpleQueryController {
     //Second Exercise
 
     @GetMapping(value = "byNameAndPrice")
-    public ResponseEntity<List<Object[]>> getAllDistBooks(){
+    public ResponseEntity<List<BookView>> getAllDistBooks(){
        return ResponseEntity.ok(bookService.getAllDistinctBooks());
     }
 
@@ -53,7 +53,7 @@ public class SimpleQueryController {
 
     //Third Exercise
     @GetMapping(value = "buyersNameAndDisc")
-    public ResponseEntity<List<Object[]>> getAllLastNamesAndDiscByDistrict(){
+    public ResponseEntity<List<BuyerViewV1>> getAllLastNamesAndDiscByDistrict(){
         return ResponseEntity.ok(buyerService.getAllNamesAndDiscounts());
     }
 
@@ -65,12 +65,13 @@ public class SimpleQueryController {
         return ResponseEntity.ok(result);
     }
     @GetMapping(value = "bookNamesAndPrices/{minPrice}")
-    public ResponseEntity<List<Object[]>> getAllBookNamesAndPricesByMinPriceAndWord(@PathVariable(name = "minPrice") Double price){
+    public ResponseEntity<List<BookViewWithNamesAndPrices>> getAllBookNamesAndPricesByMinPriceAndWord(@PathVariable(name = "minPrice") Double price){
         if(price<=0){
             return new ResponseEntity("Book price cannot be negative or 0", HttpStatus.BAD_REQUEST);
         }
-        List<Object[]> result= bookService.getBooksNamesAndPrices(price);
+        List<BookViewWithNamesAndPrices> result= bookService.getBooksNamesAndPrices(price);
         if (result.size()==0) return new ResponseEntity(HttpStatus.NO_CONTENT);
         return ResponseEntity.ok(result);
     }
+
 }

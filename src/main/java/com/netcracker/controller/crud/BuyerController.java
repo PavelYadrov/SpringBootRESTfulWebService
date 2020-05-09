@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/buyer/")
+@RequestMapping(value = "buyer/")
 public class BuyerController {
 
     private BuyerService buyerService;

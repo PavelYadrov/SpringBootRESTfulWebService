@@ -19,17 +19,23 @@ public class Purchase {
     @NonNull
     private Date date;
 
-    @NonNull
-    private Long shop_id;
+    @ManyToOne(optional = false,cascade = CascadeType.ALL)
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 
-    @NonNull
-    private Long buyer_id;
+    @ManyToOne(optional = false,cascade = CascadeType.ALL)
+    @JoinColumn(name = "buyer_id")
+    private Buyer buyer;
 
-    @NonNull
-    private Long book_id;
+    @ManyToOne(optional = false,cascade = CascadeType.ALL)
+    @JoinColumn(name = "book_id")
+    private Book book;
 
     @NonNull
     private Integer quantity;
 
+    @NonNull
     private Double sum;
+
+
 }

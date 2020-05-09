@@ -3,6 +3,7 @@ package com.netcracker.service;
 import com.netcracker.dto.BuyerDTO;
 import com.netcracker.model.Buyer;
 import com.netcracker.repos.BuyerRepository;
+import com.netcracker.view.buyer.BuyerViewV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,8 +56,8 @@ public class BuyerService {
         return dists;
     }
 
-    public List<Object[]> getAllNamesAndDiscounts(){
-        List<Object[]> list = buyerRepository.findByDistrict();
+    public List<BuyerViewV1> getAllNamesAndDiscounts(){
+        List<BuyerViewV1> list = buyerRepository.findByDistrict();
         log.info("IN getAllNamesAndDiscounts : {}",list);
         return list;
     }

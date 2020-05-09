@@ -3,6 +3,7 @@ package com.netcracker.service;
 import com.netcracker.dto.ShopDTO;
 import com.netcracker.model.Shop;
 import com.netcracker.repos.ShopRepository;
+import com.netcracker.view.shop.ShopViewWithParams;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class ShopService {
         return names;
     }
 
-    public List<Shop> getAllShopsOmitLocationWithDiscountInterval(String location, Integer lower,Integer higher){
+    public List<ShopViewWithParams> getAllShopsOmitLocationWithDiscountInterval(String location, Integer lower, Integer higher){
         if (lower==null){
             lower=1;
             higher=100;

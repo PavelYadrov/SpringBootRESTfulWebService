@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/book/")
+@RequestMapping(value = "book/")
 public class BookController {
     private BookService bookService;
     private BookRepository bookRepository;
